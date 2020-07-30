@@ -47,7 +47,7 @@ class FGLViewActivity : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_CHOOSE && resultCode == Activity.RESULT_OK) {
-            mGLView.setShape(data?.getSerializableExtra("name") as Class<out Shape>?)
+            mGLView.setShape(data?.getSerializableExtra("name") as Class<out Shape>)
         }
     }
 }

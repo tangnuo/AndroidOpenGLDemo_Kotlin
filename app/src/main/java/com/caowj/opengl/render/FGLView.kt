@@ -23,7 +23,7 @@ class FGLView @JvmOverloads constructor(
         renderMode = RENDERMODE_WHEN_DIRTY
     }
 
-    fun setShape(clazz: Class<out Shape?>?) {
+    fun setShape(clazz: Class<out Shape>) {
         try {
             renderer!!.setShape(clazz)
         } catch (e: Exception) {
