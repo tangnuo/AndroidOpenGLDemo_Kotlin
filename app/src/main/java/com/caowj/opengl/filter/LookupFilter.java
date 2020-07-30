@@ -6,9 +6,9 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-import java.io.IOException;
-
 import com.caowj.opengl.utils.EasyGlUtils;
+
+import java.io.IOException;
 
 public class LookupFilter extends AFilter {
 
@@ -17,7 +17,7 @@ public class LookupFilter extends AFilter {
 
     private float intensity;
 
-    private int[] mastTextures=new int[1];
+    private int[] mastTextures = new int[1];
     private Bitmap mBitmap;
 
     public LookupFilter(Resources mRes) {
@@ -26,26 +26,26 @@ public class LookupFilter extends AFilter {
 
     @Override
     protected void onCreate() {
-        createProgramByAssetsFile("lookup/lookup.vert","lookup/lookup.frag");
-        mHMaskImage= GLES20.glGetUniformLocation(mProgram,"maskTexture");
-        mHIntensity= GLES20.glGetUniformLocation(mProgram,"intensity");
-        EasyGlUtils.genTexturesWithParameter(1,mastTextures,0, GLES20.GL_RGBA,512,512);
+        createProgramByAssetsFile("lookup/lookup.vert", "lookup/lookup.frag");
+        mHMaskImage = GLES20.glGetUniformLocation(mProgram, "maskTexture");
+        mHIntensity = GLES20.glGetUniformLocation(mProgram, "intensity");
+        EasyGlUtils.genTexturesWithParameter(1, mastTextures, 0, GLES20.GL_RGBA, 512, 512);
     }
 
-    public void setIntensity(float value){
-        this.intensity=value;
+    public void setIntensity(float value) {
+        this.intensity = value;
     }
 
-    public void setMaskImage(String mask){
+    public void setMaskImage(String mask) {
         try {
-            mBitmap= BitmapFactory.decodeStream(mRes.getAssets().open(mask));
+            mBitmap = BitmapFactory.decodeStream(mRes.getAssets().open(mask));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setMaskImage(Bitmap bitmap){
-        this.mBitmap=bitmap;
+    public void setMaskImage(Bitmap bitmap) {
+        this.mBitmap = bitmap;
     }
 
     @Override
@@ -61,15 +61,15 @@ public class LookupFilter extends AFilter {
     @Override
     protected void onSetExpandData() {
         super.onSetExpandData();
-        GLES20.glUniform1f(mHIntensity,intensity);
-        if(mastTextures[0]!=0){
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0+getTextureType()+1);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,mastTextures[0]);
-            if(mBitmap!=null&&!mBitmap.isRecycled()){
-                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D,0,mBitmap,0);
+        GLES20.glUniform1f(mHIntensity, intensity);
+        if (mastTextures[0] != 0) {
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + getTextureType() + 1);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mastTextures[0]);
+            if (mBitmap != null && !mBitmap.isRecycled()) {
+                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
                 mBitmap.recycle();
             }
-            GLES20.glUniform1i(mHMaskImage,getTextureType()+1);
+            GLES20.glUniform1i(mHMaskImage, getTextureType() + 1);
         }
 
 

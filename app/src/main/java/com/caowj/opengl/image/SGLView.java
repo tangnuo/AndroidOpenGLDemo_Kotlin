@@ -1,8 +1,8 @@
 /*
  *
  * SGLView.java
- * 
- * Created by Wuwang on 2016/10/15
+ *
+ * Created on 2016/10/15
  * Copyright © 2016年 深圳哎吖科技. All rights reserved.
  */
 package com.caowj.opengl.image;
@@ -12,9 +12,9 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import java.io.IOException;
-
 import com.caowj.opengl.image.filter.AFilter;
+
+import java.io.IOException;
 
 /**
  * Description:
@@ -24,7 +24,7 @@ public class SGLView extends GLSurfaceView {
     private SGLRender render;
 
     public SGLView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public SGLView(Context context, AttributeSet attrs) {
@@ -32,9 +32,9 @@ public class SGLView extends GLSurfaceView {
         init();
     }
 
-    private void init(){
+    private void init() {
         setEGLContextClientVersion(2);
-        render=new SGLRender(this);
+        render = new SGLRender(this);
         setRenderer(render);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
@@ -46,11 +46,11 @@ public class SGLView extends GLSurfaceView {
         }
     }
 
-    public SGLRender getRender(){
+    public SGLRender getRender() {
         return render;
     }
 
-    public void setFilter(AFilter filter){
+    public void setFilter(AFilter filter) {
         render.setFilter(filter);
     }
 

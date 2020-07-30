@@ -1,8 +1,8 @@
 /*
  *
  * GrayFilter.java
- * 
- * Created by Wuwang on 2016/12/14
+ *
+ * Created on 2016/12/14
  * Copyright © 2016年 深圳哎吖科技. All rights reserved.
  */
 package com.caowj.opengl.filter;
@@ -21,7 +21,7 @@ public class GrayFilter extends AFilter {
     @Override
     protected void onCreate() {
         createProgramByAssetsFile("shader/base_vertex.sh",
-            "shader/color/gray_fragment.frag");
+                "shader/color/gray_fragment.frag");
     }
 
     @Override

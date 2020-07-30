@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:background="#FF555555">
     <!--<ImageView android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
+    <!--android:layout_height="match_parent"-->
     <!--android:src="@mipmap/tbg"-->
     <!--android:scaleType="centerCrop"/>-->
     <com.caowj.opengl.etc.ZipAniView
+        android:id="@+id/mAni"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/mAni"
         android:layout_centerInParent="true" />
 </RelativeLayout>

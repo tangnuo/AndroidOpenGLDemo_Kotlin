@@ -1,8 +1,8 @@
 /*
  *
  * ZipPkmReader.java
- * 
- * Created by Wuwang on 2016/12/8
+ *
+ * Created on 2016/12/8
  * Copyright © 2016年 深圳哎吖科技. All rights reserved.
  */
 package com.caowj.opengl.etc;
@@ -33,84 +33,84 @@ public class ZipPkmReader {
     private ZipEntry mZipEntry;
     private ByteBuffer headerBuffer;
 
-    public ZipPkmReader(Context context){
+    public ZipPkmReader(Context context) {
         this(context.getAssets());
     }
 
-    public ZipPkmReader(AssetManager manager){
-        this.mManager=manager;
+    public ZipPkmReader(AssetManager manager) {
+        this.mManager = manager;
     }
 
-    public void setZipPath(String path){
-        Log.e("wuwang",path+" set");
-        this.path=path;
+    public void setZipPath(String path) {
+        Log.e("caowj", path + " set");
+        this.path = path;
     }
 
-    public boolean open(){
-        Log.e("wuwang",path+" open");
-        if(path==null)return false;
+    public boolean open() {
+        Log.e("caowj", path + " open");
+        if (path == null) return false;
         try {
-            if(path.startsWith("assets/")){
-                InputStream s=mManager.open(path.substring(7));
-                mZipStream=new ZipInputStream(s);
-            }else{
-                File f=new File(path);
-                Log.e("wuwang",path+" is File exists->"+f.exists());
-                mZipStream=new ZipInputStream(new FileInputStream(path));
+            if (path.startsWith("assets/")) {
+                InputStream s = mManager.open(path.substring(7));
+                mZipStream = new ZipInputStream(s);
+            } else {
+                File f = new File(path);
+                Log.e("caowj", path + " is File exists->" + f.exists());
+                mZipStream = new ZipInputStream(new FileInputStream(path));
             }
             return true;
         } catch (IOException e) {
-            Log.e("wuwang","eee-->"+e.getMessage());
+            Log.e("caowj", "eee-->" + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public void close(){
-        if(mZipStream!=null){
+    public void close() {
+        if (mZipStream != null) {
             try {
                 mZipStream.closeEntry();
                 mZipStream.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(headerBuffer!=null){
+            if (headerBuffer != null) {
                 headerBuffer.clear();
-                headerBuffer=null;
+                headerBuffer = null;
             }
         }
     }
 
-    private boolean hasElements(){
+    private boolean hasElements() {
         try {
-            if(mZipStream!=null){
-                mZipEntry=mZipStream.getNextEntry();
-                if(mZipEntry!=null){
+            if (mZipStream != null) {
+                mZipEntry = mZipStream.getNextEntry();
+                if (mZipEntry != null) {
                     return true;
                 }
-                Log.e("wuwang","mZip entry null");
+                Log.e("caowj", "mZip entry null");
             }
         } catch (IOException e) {
-            Log.e("wuwang","err  dd->"+e.getMessage());
+            Log.e("caowj", "err  dd->" + e.getMessage());
             e.printStackTrace();
         }
         return false;
     }
 
-    public InputStream getNextStream(){
-        if(hasElements()){
+    public InputStream getNextStream() {
+        if (hasElements()) {
             return mZipStream;
         }
         return null;
     }
 
-    public ETC1Util.ETC1Texture getNextTexture(){
-        if(hasElements()){
+    public ETC1Util.ETC1Texture getNextTexture() {
+        if (hasElements()) {
             try {
-                ETC1Util.ETC1Texture e= createTexture(mZipStream);
+                ETC1Util.ETC1Texture e = createTexture(mZipStream);
                 return e;
             } catch (IOException e1) {
-                Log.e("wuwang","err->"+e1.getMessage());
+                Log.e("caowj", "err->" + e1.getMessage());
                 e1.printStackTrace();
             }
         }
@@ -125,9 +125,9 @@ public class ZipPkmReader {
             if (input.read(ioBuffer, 0, ETC1.ETC_PKM_HEADER_SIZE) != ETC1.ETC_PKM_HEADER_SIZE) {
                 throw new IOException("Unable to read PKM file header.");
             }
-            if(headerBuffer==null){
+            if (headerBuffer == null) {
                 headerBuffer = ByteBuffer.allocateDirect(ETC1.ETC_PKM_HEADER_SIZE)
-                    .order(ByteOrder.nativeOrder());
+                        .order(ByteOrder.nativeOrder());
             }
             headerBuffer.put(ioBuffer, 0, ETC1.ETC_PKM_HEADER_SIZE).position(0);
             if (!ETC1.isValid(headerBuffer)) {
@@ -139,8 +139,8 @@ public class ZipPkmReader {
         int encodedSize = ETC1.getEncodedDataSize(width, height);
         ByteBuffer dataBuffer = ByteBuffer.allocateDirect(encodedSize).order(ByteOrder.nativeOrder());
         int len;
-        while ((len =input.read(ioBuffer))!=-1){
-            dataBuffer.put(ioBuffer,0,len);
+        while ((len = input.read(ioBuffer)) != -1) {
+            dataBuffer.put(ioBuffer, 0, len);
         }
         dataBuffer.position(0);
         return new ETC1Util.ETC1Texture(width, height, dataBuffer);

@@ -1,8 +1,8 @@
 /*
  *
  * Triangle.java
- * 
- * Created by Wuwang on 2016/9/30
+ *
+ * Created on 2016/9/30
  */
 package com.caowj.opengl.render;
 
@@ -19,14 +19,14 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Description:
+ * Description:圆形
  */
 public class Oval extends Shape {
 
-    private FloatBuffer vertexBuffer;
+    static final int COORDS_PER_VERTEX = 3;
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
-                    "uniform mat4 vMatrix;"+
+                    "uniform mat4 vMatrix;" +
                     "void main() {" +
                     "  gl_Position = vMatrix*vPosition;" +
                     "}";
@@ -37,42 +37,31 @@ public class Oval extends Shape {
                     "void main() {" +
                     "  gl_FragColor = vColor;" +
                     "}";
-
-    private int mProgram;
-
-    static final int COORDS_PER_VERTEX = 3;
-
-
-    private int mPositionHandle;
-    private int mColorHandle;
-
-    private float[] mViewMatrix=new float[16];
-    private float[] mProjectMatrix=new float[16];
-    private float[] mMVPMatrix=new float[16];
-
     //顶点之间的偏移量
     private final int vertexStride = 0; // 每个顶点四个字节
-
-    private int mMatrixHandler;
-
-    private float radius=1.0f;
-    private int n=360;  //切割份数
-
-    private float[] shapePos;
-
-    private float height=0.0f;
-
     //设置颜色，依次为红绿蓝和透明通道
-    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float[] color = {1.0f, 1.0f, 1.0f, 1.0f};
+    private FloatBuffer vertexBuffer;
+    private int mProgram;
+    private int mPositionHandle;
+    private int mColorHandle;
+    private float[] mViewMatrix = new float[16];
+    private float[] mProjectMatrix = new float[16];
+    private float[] mMVPMatrix = new float[16];
+    private int mMatrixHandler;
+    private float radius = 1.0f;
+    private int n = 360;  //切割份数
+    private float[] shapePos;
+    private float height = 0.0f;
 
-    public Oval(View mView){
-        this(mView,0.0f);
+    public Oval(View mView) {
+        this(mView, 0.0f);
     }
 
     public Oval(View mView, float height) {
         super(mView);
-        this.height=height;
-        shapePos= createPositions();
+        this.height = height;
+        shapePos = createPositions();
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 shapePos.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -95,24 +84,24 @@ public class Oval extends Shape {
         GLES20.glLinkProgram(mProgram);
     }
 
-    public void setRadius(float radius){
-        this.radius=radius;
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
 
-    private float[]  createPositions(){
-        ArrayList<Float> data=new ArrayList<>();
+    private float[] createPositions() {
+        ArrayList<Float> data = new ArrayList<>();
         data.add(0.0f);             //设置圆心坐标
         data.add(0.0f);
         data.add(height);
-        float angDegSpan=360f/n;
-        for(float i=0;i<360+angDegSpan;i+=angDegSpan){
-            data.add((float) (radius* Math.sin(i* Math.PI/180f)));
-            data.add((float)(radius* Math.cos(i* Math.PI/180f)));
+        float angDegSpan = 360f / n;
+        for (float i = 0; i < 360 + angDegSpan; i += angDegSpan) {
+            data.add((float) (radius * Math.sin(i * Math.PI / 180f)));
+            data.add((float) (radius * Math.cos(i * Math.PI / 180f)));
             data.add(height);
         }
-        float[] f=new float[data.size()];
-        for (int i=0;i<f.length;i++){
-            f[i]=data.get(i);
+        float[] f = new float[data.size()];
+        for (int i = 0; i < f.length; i++) {
+            f[i] = data.get(i);
         }
         return f;
     }
@@ -125,17 +114,17 @@ public class Oval extends Shape {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         //计算宽高比
-        float ratio=(float)width/height;
+        float ratio = (float) width / height;
         //设置透视投影
         Matrix.frustumM(mProjectMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
         //设置相机位置
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         //计算变换矩阵
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix, 0, mViewMatrix, 0);
     }
 
-    public void setMatrix(float[] matrix){
-        this.mMVPMatrix=matrix;
+    public void setMatrix(float[] matrix) {
+        this.mMVPMatrix = matrix;
     }
 
     @Override
@@ -143,9 +132,9 @@ public class Oval extends Shape {
         //将程序加入到OpenGLES2.0环境
         GLES20.glUseProgram(mProgram);
         //获取变换矩阵vMatrix成员句柄
-        mMatrixHandler= GLES20.glGetUniformLocation(mProgram,"vMatrix");
+        mMatrixHandler = GLES20.glGetUniformLocation(mProgram, "vMatrix");
         //指定vMatrix的值
-        GLES20.glUniformMatrix4fv(mMatrixHandler,1,false,mMVPMatrix,0);
+        GLES20.glUniformMatrix4fv(mMatrixHandler, 1, false, mMVPMatrix, 0);
         //获取顶点着色器的vPosition成员句柄
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         //启用三角形顶点的句柄
@@ -159,7 +148,7 @@ public class Oval extends Shape {
         //设置绘制三角形的颜色
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
         //绘制三角形
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, shapePos.length/3);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, shapePos.length / 3);
         //禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }

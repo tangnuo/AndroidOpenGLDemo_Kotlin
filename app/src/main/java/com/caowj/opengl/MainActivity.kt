@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.caowj.opengl.render.FGLViewActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), View.OnClickListener {
@@ -16,7 +17,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
         mList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         data = ArrayList()
-//        add("绘制形体", FGLViewActivity::class.java)
+        add("绘制形体", FGLViewActivity::class.java)
 //        add("图片处理", SGLViewActivity::class.java)
 //        add("图形变换", VaryActivity::class.java)
 //        add("相机", CameraActivity::class.java)

@@ -1,8 +1,8 @@
 /*
  *
  * ZipAniView.java
- * 
- * Created by Wuwang on 2016/12/8
+ *
+ * Created on 2016/12/8
  * Copyright © 2016年 深圳哎吖科技. All rights reserved.
  */
 package com.caowj.opengl.etc;
@@ -23,7 +23,7 @@ public class ZipAniView extends GLSurfaceView implements GLSurfaceView.Renderer 
     private ZipMulDrawer mDrawer;
 
     public ZipAniView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ZipAniView(Context context, AttributeSet attrs) {
@@ -31,39 +31,39 @@ public class ZipAniView extends GLSurfaceView implements GLSurfaceView.Renderer 
         init();
     }
 
-    private void init(){
+    private void init() {
         setEGLContextClientVersion(2);
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        setEGLConfigChooser(8,8,8,8,16,0);
+        setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         setRenderer(this);
         setRenderMode(RENDERMODE_WHEN_DIRTY);
-        mDrawer=new ZipMulDrawer(getResources());
+        mDrawer = new ZipMulDrawer(getResources());
     }
 
-    public void setScaleType(int type){
-        if(mDrawer!=null){
-            mDrawer.setInt(ZipMulDrawer.TYPE,type);
+    public void setScaleType(int type) {
+        if (mDrawer != null) {
+            mDrawer.setInt(ZipMulDrawer.TYPE, type);
         }
     }
 
-    public void setAnimation(String path, int timeStep){
-        mDrawer.setAnimation(this,path,timeStep);
+    public void setAnimation(String path, int timeStep) {
+        mDrawer.setAnimation(this, path, timeStep);
     }
 
-    public void start(){
+    public void start() {
         mDrawer.start();
     }
 
-    public void stop(){
+    public void stop() {
         mDrawer.stop();
     }
 
-    public boolean isPlay(){
+    public boolean isPlay() {
         return mDrawer.isPlay();
     }
 
-    public void setStateChangeListener(StateChangeListener listener){
+    public void setStateChangeListener(StateChangeListener listener) {
         mDrawer.setStateChangeListener(listener);
     }
 
@@ -74,7 +74,7 @@ public class ZipAniView extends GLSurfaceView implements GLSurfaceView.Renderer 
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        mDrawer.onSizeChanged(width,height);
+        mDrawer.onSizeChanged(width, height);
     }
 
     @Override

@@ -1,8 +1,8 @@
 /*
  *
  * Triangle.java
- * 
- * Created by Wuwang on 2016/9/30
+ *
+ * Created on 2016/9/30
  */
 package com.caowj.opengl.render;
 
@@ -19,56 +19,47 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Description:
+ * Description:正方形
  */
 public class Square extends Shape {
 
-    private FloatBuffer vertexBuffer;
-    private ShortBuffer indexBuffer;
+    static final int COORDS_PER_VERTEX = 3;
+    static float[] triangleCoords = {
+            -0.5f, 0.5f, 0.0f, // top left
+            -0.5f, -0.5f, 0.0f, // bottom left
+            0.5f, -0.5f, 0.0f, // bottom right
+            0.5f, 0.5f, 0.0f  // top right
+    };
+    static short[] index = {
+            0, 1, 2, 0, 2, 3
+    };
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
-                    "uniform mat4 vMatrix;"+
+                    "uniform mat4 vMatrix;" +
                     "void main() {" +
                     "  gl_Position = vMatrix*vPosition;" +
                     "}";
-
     private final String fragmentShaderCode =
             "precision mediump float;" +
                     "uniform vec4 vColor;" +
                     "void main() {" +
                     "  gl_FragColor = vColor;" +
                     "}";
-
-    private int mProgram;
-
-    static final int COORDS_PER_VERTEX = 3;
-    static float triangleCoords[] = {
-            -0.5f,  0.5f, 0.0f, // top left
-            -0.5f, -0.5f, 0.0f, // bottom left
-            0.5f, -0.5f, 0.0f, // bottom right
-            0.5f,  0.5f, 0.0f  // top right
-    };
-
-    static short index[]={
-      0,1,2,0,2,3
-    };
-
-    private int mPositionHandle;
-    private int mColorHandle;
-
-    private float[] mViewMatrix=new float[16];
-    private float[] mProjectMatrix=new float[16];
-    private float[] mMVPMatrix=new float[16];
-
     //顶点个数
     private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
     //顶点之间的偏移量
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 每个顶点四个字节
-
-    private int mMatrixHandler;
-
     //设置颜色，依次为红绿蓝和透明通道
-    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float[] color = {1.0f, 1.0f, 1.0f, 1.0f};
+    private FloatBuffer vertexBuffer;
+    private ShortBuffer indexBuffer;
+    private int mProgram;
+    private int mPositionHandle;
+    private int mColorHandle;
+    private float[] mViewMatrix = new float[16];
+    private float[] mProjectMatrix = new float[16];
+    private float[] mMVPMatrix = new float[16];
+    private int mMatrixHandler;
 
     public Square(View mView) {
         super(mView);
@@ -79,9 +70,9 @@ public class Square extends Shape {
         vertexBuffer.put(triangleCoords);
         vertexBuffer.position(0);
 
-        ByteBuffer cc= ByteBuffer.allocateDirect(index.length*2);
+        ByteBuffer cc = ByteBuffer.allocateDirect(index.length * 2);
         cc.order(ByteOrder.nativeOrder());
-        indexBuffer=cc.asShortBuffer();
+        indexBuffer = cc.asShortBuffer();
         indexBuffer.put(index);
         indexBuffer.position(0);
 
@@ -108,13 +99,13 @@ public class Square extends Shape {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         //计算宽高比
-        float ratio=(float)width/height;
+        float ratio = (float) width / height;
         //设置透视投影
         Matrix.frustumM(mProjectMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
         //设置相机位置
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         //计算变换矩阵
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix, 0, mViewMatrix, 0);
     }
 
     @Override
@@ -122,9 +113,9 @@ public class Square extends Shape {
         //将程序加入到OpenGLES2.0环境
         GLES20.glUseProgram(mProgram);
         //获取变换矩阵vMatrix成员句柄
-        mMatrixHandler= GLES20.glGetUniformLocation(mProgram,"vMatrix");
+        mMatrixHandler = GLES20.glGetUniformLocation(mProgram, "vMatrix");
         //指定vMatrix的值
-        GLES20.glUniformMatrix4fv(mMatrixHandler,1,false,mMVPMatrix,0);
+        GLES20.glUniformMatrix4fv(mMatrixHandler, 1, false, mMVPMatrix, 0);
         //获取顶点着色器的vPosition成员句柄
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         //启用三角形顶点的句柄
@@ -140,7 +131,7 @@ public class Square extends Shape {
         //绘制三角形
 //        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, vertexCount);
         //索引法绘制正方形
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES,index.length, GLES20.GL_UNSIGNED_SHORT,indexBuffer);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, index.length, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
         //禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }

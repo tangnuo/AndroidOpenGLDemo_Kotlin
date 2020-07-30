@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OpenGL</string>
+    <string name="app_name">OpenGL_Kotlin</string>
     <string name="change">切换</string>
 
     <string name="type_draw">绘制形体</string>
